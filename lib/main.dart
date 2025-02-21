@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:theme_app/app_theme_provider.dart';
+import 'package:theme_app/ui_helper.dart';
 
 void main() {
   runApp(ChangeNotifierProvider(create: (context) => AppThemeProvider(),
@@ -20,15 +21,9 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         title: 'Flutter Demo',
         // Theme brightness(Material Theme)
-        darkTheme: ThemeData.dark(),
         themeMode: provider.isDark ?ThemeMode.dark:ThemeMode.light ,
-        theme: ThemeData(
-          //platform Britness
-          brightness: Brightness.light,
-          primarySwatch: Colors.pink,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
-        ),
+        darkTheme: MyAppTheme.darkTheme(),
+        theme: MyAppTheme.lightTheme(),
         home:HomePage() ,
       );
     });
@@ -49,13 +44,14 @@ class _HomePageState extends State<HomePage> {
   var textColor=Colors.black;
   var textSecondaryColor=Colors.white;
   late  bool isDark ;
-  var title;
+  var title="Light";
 
 
   @override
   Widget build(BuildContext context) {
     var mqData=MediaQuery.of(context);
     print("Platform: ${mqData.platformBrightness}");
+
     var themeData=Theme.of(context);
     print("Theme: ${themeData.brightness}");
     isDark= themeData.brightness==Brightness.dark;
@@ -67,7 +63,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: bgColor,
       body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Hello",style:TextStyle(color: textColor) ,),
+          Text("Hey i'm Above This...",style:themeData.textTheme.headlineLarge!.copyWith(fontWeight: FontWeight.bold)),
           Container(height:200,width:300,
             //themeMode: ThemeMode.light, => bg=white & box= black,blue
             //themeMode: ThemeMode.dark  => bg=black  & box= white,purple
@@ -75,14 +71,20 @@ class _HomePageState extends State<HomePage> {
             color: secoundaryColor,
             //print hello Dark text
             child: Center(
-              child: Text("Welcome ${isDark ?"Dark":"White"}",
-                style: TextStyle(
-                  //text color
-                    color:textSecondaryColor,fontSize: 40),
+              child: Text("Hey this is $title",
+                style: themeData.textTheme.bodyMedium!.copyWith(color: textSecondaryColor,fontWeight: FontWeight.bold)
               ),
             ),
-
           ),
+
+          Container(width: 200,margin: EdgeInsets.all(11),
+              child: ElevatedButton(onPressed: (){
+              },
+                  style: themeData.elevatedButtonTheme.style,
+                  child: Text("Login",style: themeData.textTheme.labelMedium!.copyWith(color: textSecondaryColor),)
+              )),
+
+
           Row(mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("Dark Mode"),
@@ -113,7 +115,7 @@ class _HomePageState extends State<HomePage> {
       secoundaryColor=Colors.black;
       textColor=Colors.black;
       textSecondaryColor=Colors.white;
-      title="Dark";
+      title="Light";
 
     }
   }
