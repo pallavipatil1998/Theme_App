@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -37,30 +38,66 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var bgColor=Colors.white;
+  var secoundaryColor=Colors.black;
+  var textColor=Colors.black;
+  var textSecondaryColor=Colors.white;
+  late  bool isDark ;
+  var title;
+
+
   @override
   Widget build(BuildContext context) {
     var mqData=MediaQuery.of(context);
     print("Platform: ${mqData.platformBrightness}");
     var themeData=Theme.of(context);
     print("Theme: ${themeData.brightness}");
-    var isDark= themeData.brightness==Brightness.dark;
+    isDark= themeData.brightness==Brightness.dark;
+    getThemeColors();
 
 
     return Scaffold(
       //screen Background color
-      backgroundColor: isDark ? Colors.black : Colors.white,
-      body: Center(child: Container(height:200,width:300,
-        //themeMode: ThemeMode.light, => bg=white & box= black,blue
-        //themeMode: ThemeMode.dark  => bg=black  & box= white,purple
-        //container color
-        color: isDark ? Colors.purple : Colors.blue,
-        //print hello Dark text
-        child: Text("HELLO ${isDark ?"Dark":"White"}",
-          style: TextStyle(
-            //text color
-              color: isDark ? Colors.red : Colors.yellow,fontSize: 40),
-        ),
+      backgroundColor: bgColor,
+      body: Center(child: Column(mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Hello",style:TextStyle(color: textColor) ,),
+          Container(height:200,width:300,
+            //themeMode: ThemeMode.light, => bg=white & box= black,blue
+            //themeMode: ThemeMode.dark  => bg=black  & box= white,purple
+            //container color
+            color: secoundaryColor,
+            //print hello Dark text
+            child: Center(
+              child: Text("Welcome ${isDark ?"Dark":"White"}",
+                style: TextStyle(
+                  //text color
+                    color:textSecondaryColor,fontSize: 40),
+              ),
+            ),
+          ),
+        ],
       )),
     );
+  }
+
+
+
+  void getThemeColors(){
+    if(isDark){
+      //dark
+      bgColor=Colors.black;
+      secoundaryColor=Colors.white;
+      textColor=Colors.white;
+      textSecondaryColor=Colors.black;
+      title="Dark";
+    }else{
+      bgColor=Colors.white;
+      secoundaryColor=Colors.black;
+      textColor=Colors.black;
+      textSecondaryColor=Colors.white;
+      title="Dark";
+
+    }
   }
 }
