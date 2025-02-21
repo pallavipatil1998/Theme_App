@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:theme_app/app_theme_provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(create: (context) => AppThemeProvider(),
+    child: MyApp(),
+  ));
+
 }
 
 class MyApp extends StatelessWidget {
@@ -11,21 +16,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      //Theme brightness(Material Theme)
-      darkTheme: ThemeData.dark(),
-      // themeMode: ThemeMode.light,
-      themeMode: ThemeMode.dark,
-      theme: ThemeData(
-        //platform Britness
-        brightness: Brightness.light,
-        primarySwatch: Colors.pink,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home:HomePage() ,
-    );
+    return Consumer<AppThemeProvider>(builder: (_,provider,__){
+      return MaterialApp(
+        title: 'Flutter Demo',
+        // Theme brightness(Material Theme)
+        darkTheme: ThemeData.dark(),
+        themeMode: provider.isDark ?ThemeMode.dark:ThemeMode.light ,
+        theme: ThemeData(
+          //platform Britness
+          brightness: Brightness.light,
+          primarySwatch: Colors.pink,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        home:HomePage() ,
+      );
+    });
   }
 }
 
@@ -75,7 +81,18 @@ class _HomePageState extends State<HomePage> {
                     color:textSecondaryColor,fontSize: 40),
               ),
             ),
+
           ),
+          Row(mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Dark Mode"),
+              Switch(value: isDark, onChanged: (value){
+                context.read<AppThemeProvider>().updateTheme(value);
+              }),
+            ],
+          ),
+
+
         ],
       )),
     );
